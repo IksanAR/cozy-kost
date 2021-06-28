@@ -138,8 +138,18 @@ class HomePage extends StatelessWidget {
                   if (snapshot.hasData) {
                     List<Space> data = snapshot.data;
 
+                    int index = 0;
+
                     return Column(
-                        children: data.map((item) => SpaceCard(item)).toList());
+                        children: data.map((item) {
+                      index++;
+                      return Container(
+                        margin: EdgeInsets.only(
+                          top: index == 1 ? 0 : 30,
+                        ),
+                        child: SpaceCard(item),
+                      );
+                    }).toList());
                   }
 
                   return Center(

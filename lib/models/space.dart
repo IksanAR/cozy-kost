@@ -41,8 +41,9 @@ class Space {
     rating = json['rating'];
     address = json['address'];
     phone = json['phone'];
+    photos = json['photos'];
     mapUrl = json['map_url'];
-    numberOfBedrooms = json['number-of_bedrooms'];
+    numberOfBedrooms = json['number_of_bedrooms'];
     numberOfCupboards = json['number_of_cupboards'];
     numberOfKitchens = json['number_of_kitchens'];
   }

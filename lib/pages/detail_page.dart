@@ -1,10 +1,16 @@
+import 'package:bwa_cozy/models/space.dart';
 import 'package:bwa_cozy/pages/error_page.dart';
 import 'package:bwa_cozy/theme.dart';
 import 'package:bwa_cozy/widget/facility_item.dart';
+import 'package:bwa_cozy/widget/rating_item.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatelessWidget {
+  final Space space;
+
+  DetailPage(this.space);
+
   @override
   Widget build(BuildContext context) {
     // ignore: unused_element
@@ -28,8 +34,8 @@ class DetailPage extends StatelessWidget {
         bottom: false,
         child: Stack(
           children: [
-            Image.asset(
-              'assets/thumbnail.png',
+            Image.network(
+              space.imageUrl,
               width: MediaQuery.of(context).size.width,
               height: 350,
               fit: BoxFit.cover,
@@ -65,7 +71,7 @@ class DetailPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Kuretakeso Hott',
+                                  space.name,
                                   style: blackTextStyle.copyWith(
                                     fontSize: 22,
                                   ),
@@ -75,7 +81,7 @@ class DetailPage extends StatelessWidget {
                                 ),
                                 Text.rich(
                                   TextSpan(
-                                    text: '\$52',
+                                    text: '\$${space.price}',
                                     style: purpleTextStyle.copyWith(
                                       fontSize: 16,
                                     ),
@@ -92,44 +98,17 @@ class DetailPage extends StatelessWidget {
                               ],
                             ),
                             Row(
-                              children: [
-                                Image.asset(
-                                  'assets/Icon_star.png',
-                                  width: 20,
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Image.asset(
-                                  'assets/Icon_star.png',
-                                  width: 20,
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Image.asset(
-                                  'assets/Icon_star.png',
-                                  width: 20,
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Image.asset(
-                                  'assets/Icon_star.png',
-                                  width: 20,
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Image.asset(
-                                  'assets/Icon_star.png',
-                                  width: 20,
-                                  color: Color(0xff989BA1),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                              ],
+                              children: [1, 2, 3, 4, 5].map((index) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                    left: 2,
+                                  ),
+                                  child: RatingItem(
+                                    index: index,
+                                    rating: space.rating,
+                                  ),
+                                );
+                              }).toList(),
                             ),
                           ],
                         ),
@@ -162,17 +141,17 @@ class DetailPage extends StatelessWidget {
                             FacilityItem(
                               name: 'kitchen',
                               imgUrl: 'assets/icon_kitchen.png',
-                              total: 2,
+                              total: space.numberOfKitchens,
                             ),
                             FacilityItem(
                               name: 'bedroom',
                               imgUrl: 'assets/icon_bedroom.png',
-                              total: 3,
+                              total: space.numberOfBedrooms,
                             ),
                             FacilityItem(
                               name: 'Big Lemari',
                               imgUrl: 'assets/icon_capboard.png',
-                              total: 3,
+                              total: space.numberOfCupboards,
                             ),
                           ],
                         ),
@@ -198,40 +177,23 @@ class DetailPage extends StatelessWidget {
                       Container(
                         height: 88,
                         child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            SizedBox(
-                              width: edge,
-                            ),
-                            Image.asset(
-                              'assets/photo1.png',
-                              width: 110,
-                              height: 88,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: 18,
-                            ),
-                            Image.asset(
-                              'assets/photo2.png',
-                              width: 110,
-                              height: 88,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: 18,
-                            ),
-                            Image.asset(
-                              'assets/photo3.png',
-                              width: 110,
-                              height: 88,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: edge,
-                            ),
-                          ],
-                        ),
+                            scrollDirection: Axis.horizontal,
+                            children: space.photos.map((item) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                  left: 24,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image.network(
+                                    item,
+                                    width: 110,
+                                    height: 88,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              );
+                            }).toList()),
                       ),
                     ],
                   ),
@@ -262,14 +224,14 @@ class DetailPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Jln. Kappan Sukses No. 20\nPalembang',
+                        '${space.address}\n${space.city}',
                         style: greyTextStyle,
                       ),
                       InkWell(
                         onTap: () {
                           // launchUrl(
                           //     'https://www.google.com/maps/place/Jl.+Kyai+H.+Syahdan,+RT.7%2FRW.12,+Palmerah,+Kec.+Palmerah,+Kota+Jakarta+Barat,+Daerah+Khusus+Ibukota+Jakarta/@-6.2007958,106.7818151,817m/data=!3m2!1e3!4b1!4m5!3m4!1s0x2e69f6c328504cbf:0xac599328e838c37d!8m2!3d-6.2008011!4d106.7840038?hl=id');
-                          launchUrl('qweqweqwe');
+                          launchUrl(space.mapUrl);
                         },
                         child: Image.asset(
                           'assets/btn_map.png',
@@ -290,7 +252,7 @@ class DetailPage extends StatelessWidget {
                   width: MediaQuery.of(context).size.width - (2 * edge),
                   child: ElevatedButton(
                     onPressed: () {
-                      launchUrl('tel:+6285778742589');
+                      launchUrl('tel:${space.phone}');
                     },
                     child: Text(
                       'Book Now',
